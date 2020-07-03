@@ -22,12 +22,16 @@ var resizing_textarea = false;
 
 var canvas = null;
 
-const COLORS = ["blue","yellow"];
+const COLORS = ["blue","black","yellow","green","violet","red"];
 
 
 onload = main;
 
-// main();
+// onunload = function() {
+//     if(canvas)
+//         canvas.save();
+// };
+
 
 
 function main()
@@ -35,8 +39,9 @@ function main()
     console.log("Main");
     
     canvas = new Canvas();
-    canvas.add_textbox(600,400,300,300);
-    canvas.add_textbox(200,200,150,150);
+    canvas.load();
+    // canvas.add_textbox(600,400,300,300);
+    // canvas.add_textbox(200,200,150,150);
 
     // var handles = document.querySelectorAll(".handle");
     // console.log("Handles:",handles);
@@ -64,8 +69,10 @@ function main()
         // resize_textareas_to_grid();
     });
 
-    return;
+    document.addEventListener("wheel", zoom);
 
+
+    /*
     var textbox_divs = document.querySelectorAll(".textbox");
 
     counter = 0;
@@ -97,9 +104,9 @@ function main()
     // Zoom buttons
     // var btn_zoomin  = document.querySelector("#btn-zoomin");
     // var btn_zoomout = document.querySelector("#btn-zoomout");
-    document.addEventListener("wheel", zoom);
 
     console.log("End main");
+    */
 }
 
 
@@ -112,10 +119,13 @@ class Canvas
         this.textboxes = {};
     }
 
-    add_textbox(x=600,y=400,w=400,h=300)
+    add_textbox(x=600,y=400,w=400,h=300,color="blue",wrap="soft",text="")
     {
+        console.log(x,y,w,h,color,wrap);
+
         var handle = document.createElement("div");
         var textarea = document.createElement('textarea');
+        textarea.value = text;
 
         var wrap_toggle = document.createElement('span');
         wrap_toggle.classList.add("wrap");
@@ -127,6 +137,13 @@ class Canvas
         // colorpicker.classList.add("colorpicker");
         // colorpicker.classList.add("yellow");
         // handle.appendChild(colorpicker);
+
+
+        // Add delete button
+        var del = document.createElement("div");
+        del.classList.add("delete");
+        handle.appendChild(del);
+        del.textContent = "Close";
 
         // Add color menu
         var colormenu = document.createElement("div");
@@ -143,17 +160,18 @@ class Canvas
 
 
         handle.classList.add("handle");
-        handle.classList.add("blue");
-        textarea.setAttribute("wrap","soft");
+        handle.classList.add(color);
+        handle.setAttribute("data-color",color);
+        textarea.setAttribute("wrap",wrap);
 
-        var textbox_div = document.createElement("div");
-        textbox_div.classList.add("textbox");
-        textbox_div.appendChild(handle);
-        textbox_div.appendChild(textarea);
+        this.textbox_div = document.createElement("div");
+        this.textbox_div.classList.add("textbox");
+        this.textbox_div.appendChild(handle);
+        this.textbox_div.appendChild(textarea);
         
-        document.querySelector("body").appendChild(textbox_div);
+        document.querySelector("body").appendChild(this.textbox_div);
         
-        var id = Object.keys(this.textboxes).length;
+        var id = this.get_next_id();
         var textbox = new Textbox(id,handle,textarea);
         textbox.moveto(x,y);
         textbox.resize(w,h);
@@ -164,6 +182,74 @@ class Canvas
         return textbox;
     }
 
+    delete_textbox(id)
+    {
+        console.log("Deleting textbox with id",id);
+
+        var confirm_delete = confirm("Delete this text box?");
+        console.log(confirm_delete);
+
+        if(!confirm_delete)
+            return;
+        
+        // Delete from page
+        var textbox_div = this.textboxes[id].handle.parentNode;
+        while(textbox_div.firstChild)
+            textbox_div.removeChild(textbox_div.firstChild);
+        textbox_div.remove();
+
+        // Delete from canvas dictionary
+        delete this.textboxes[id];
+    }
+
+    get_next_id()
+    {
+        var maxid = 0;
+        
+        var ids = Object.keys(this.textboxes);
+
+        for(var i=0; i<ids.length; i++)
+        {
+            if(!this.textboxes.hasOwnProperty(i))
+                return i;
+        }
+
+        return ids.length;
+    }
+
+    save()
+    {
+        var list = [];
+        var textboxes = Object.values(this.textboxes);
+        textboxes.forEach(textbox => {
+            list.push(textbox.save());
+        });
+        // return list;
+
+        localStorage.setItem("canvas",JSON.stringify(list));
+
+        console.log("Saved textboxes");
+    }
+
+    load()
+    {
+        var list = JSON.parse(localStorage.getItem("canvas"));
+        console.log(list);
+
+        list.forEach(obj => {
+            this.add_textbox(
+                obj.x,
+                obj.y,
+                obj.w,
+                obj.h,
+                obj.color,
+                obj.wrap,
+                obj.text,
+            );
+        });
+
+        console.log("Loaded textboxes:",list);
+    }
 }
 
 
@@ -192,13 +278,14 @@ class Textbox
             document.addEventListener("mousemove", mouseresizemove.bind(this)); // <-- "this" = this.textarea
         });
 
-        this.textarea.addEventListener("click", function() {
-            console.log(this.value, this.selectionStart);
-        });
+        this.textarea.addEventListener("dblclick", this.textarea_doubleclicked);
 
         this.btnwrap = handle.querySelector(".wrap");
         this.btnwrap.addEventListener("click", this.toggle_wrap.bind(this));
-
+        
+        var del = handle.querySelector(".delete");
+        del.setAttribute("data-id",id);
+        del.addEventListener("click", this.delete_textbox);
         // this.colorpicker = handle.querySelector(".colorpicker");
         // this.colorpicker.addEventListener("click", this.toggle_colorpicker.bind(this));
         
@@ -220,6 +307,20 @@ class Textbox
         console.log("Textbox created");
         console.log("Handle:",this.handle);
         console.log("Textarea:",this.textarea);
+    }
+
+    save()
+    {
+        var obj = {
+            "x": this.handle.style.left.replace("px",""),
+            "y": this.handle.style.top.replace("px",""),
+            "w": get_w(this.handle),
+            "h": get_h(this.handle),
+            "color": this.handle.attributes["data-color"].value,
+            "wrap": this.textarea.attributes["wrap"].value,
+            "text": this.textarea.value,
+        }
+        return obj;
     }
 
     resize(w,h)
@@ -329,6 +430,37 @@ class Textbox
         else
             this.btnwrap.textContent = "wrap";
     }
+
+    textarea_doubleclicked(event)
+    {
+        // console.log(this.value, this.selectionStart);
+        var textarea = event.target;
+        
+        var text = textarea.value;
+        var lines = text.split('\n');
+        
+        var selected_line = 0;
+        for(var i=0; i<textarea.selectionStart; i++)
+        {
+            if(text[i] == '\n')
+                selected_line += 1;
+        }
+        console.log('Selected line:',selected_line,typeof(selected_line));
+        console.log(lines[selected_line])
+        console.log(lines);
+
+        // Open url
+        var url = lines[selected_line].trim();
+        if(url.includes("http") || url.includes("www"))
+        {
+            if(!url.startsWith("https://"))
+                url = "https://"+url.replace("http://","");
+
+            console.log("Opening url:",url);
+            var newwin = window.open(url, "_blank");
+            newwin.focus();
+        }
+    }
     
     set_color(event)
     {
@@ -336,12 +468,20 @@ class Textbox
         var handle = icon.parentNode.parentNode;
         
         var newcolor = icon.attributes["data-color"].value;
-        console.log(newcolor,event);
+        // console.log(newcolor,event);
 
         COLORS.forEach(color => {
             handle.classList.remove(color);
         });
         handle.classList.add(newcolor);
+        handle.setAttribute("data-color",newcolor);
+    }
+
+    delete_textbox(event)
+    {
+        var del = event.target;
+        var id = del.attributes['data-id'].value;
+        canvas.delete_textbox(id);
     }
 }
 
