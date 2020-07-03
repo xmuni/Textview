@@ -21,7 +21,7 @@ body {
     position: relative;
 
     /* transform: rotate(-5deg); */
-    /* transform: scale(150%); */
+    /* transform: scale(200%) translate(500px,500px); */
 
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -95,19 +95,6 @@ input:active {
     cursor: move;
 }
 
-.handle .wrap {
-    position: absolute;
-    top: -21px;
-    right: 10px;
-    /* color: rgba(0, 38, 88, 0.8); */
-    color: black;
-    font-weight: bold;
-    cursor: pointer;
-    text-decoration: none;
-    z-index: 200;
-    letter-spacing: 0.05rem;
-}
-
 .colorpicker {
     position: absolute;
     top: -20px;
@@ -145,7 +132,8 @@ textarea {
     /* border: 1px solid rgba(0, 0, 0, 0.2); */
     position: absolute;
     bottom: -20px;
-    right: 3rem;
+    /* right: 3rem; */
+    right: 0;
     z-index: 200;
     display: flex;
     flex-direction: row;
@@ -161,12 +149,26 @@ textarea {
     border-style: solid;
     outline: 1px solid #222;
     cursor: pointer;
+    background: white;
+}
+
+.wrap {
+    position: absolute;
+    bottom: -18px;
+    right: 120px;
+    /* color: rgba(0, 38, 88, 0.8); */
+    color: black;
+    /* font-weight: bold; */
+    cursor: pointer;
+    text-decoration: none;
+    z-index: 200;
+    letter-spacing: 0.05rem;
 }
 
 .delete {
     position: absolute;
-    bottom: -20px;
-    right: 0;
+    top: -21px;
+    right: 10px;
     /* font-weight: bold; */
     text-transform: uppercase;
     cursor: pointer;

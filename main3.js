@@ -11,8 +11,8 @@ var offset_y = 0;
 const GRID_W = 20;
 const GRID_H = 20;
 
-const ZOOM_STEP = 10;
-var scale = 100;
+const ZOOM_STEP = 0.1;
+var scale = 1;
 
 var textboxes = {};
 
@@ -24,13 +24,22 @@ var canvas = null;
 
 const COLORS = ["blue","black","yellow","green","violet","red"];
 
+var pan_start_x = 0;
+var pan_start_y = 0;
+
+var pan_x = 0;
+var pan_y = 0;
+
+// var translate_x = 0;
+// var translate_y = 0;
+
 
 onload = main;
 
-// onunload = function() {
-//     if(canvas)
-//         canvas.save();
-// };
+onunload = function() {
+    if(canvas)
+        canvas.save();
+};
 
 
 
@@ -43,9 +52,6 @@ function main()
     // canvas.add_textbox(600,400,300,300);
     // canvas.add_textbox(200,200,150,150);
 
-    // var handles = document.querySelectorAll(".handle");
-    // console.log("Handles:",handles);
-    
 
     document.addEventListener("mouseup", function() {
         console.log("Mouse up");
@@ -55,24 +61,44 @@ function main()
         drag_id = null;
         dragging = false;
         resizing_textarea = false;
-        // document.removeEventListener("mousemove", mouseresizemove);
-
-        /*
-        for(var key in textboxes) {
-            if(textboxes.hasOwnProperty(key)) {
-                textboxes[key].remove_event_listeners();
-                textboxes[key].resize_textarea_to_grid();
-            }
-        }
-        */
-
-        // resize_textareas_to_grid();
     });
+
+    document.querySelector("body").addEventListener("mousedown", pan_start);
 
     document.addEventListener("wheel", zoom);
 
+}
 
-    /*
+
+function pan_start(event)
+{
+    if(dragging || resizing_textarea)
+        return;
+
+    console.log("Pan start");
+    document.addEventListener("mousemove", pan_canvas);
+    document.addEventListener("mouseup", function() {
+        document.removeEventListener("mousemove",pan_canvas);
+    });
+
+    pan_start_x = event.pageX - pan_x;
+    pan_start_y = event.pageY - pan_y;
+}
+
+
+function pan_canvas(event)
+{
+    // console.log("Panning canvas");
+
+    pan_x = event.pageX - pan_start_x;
+    pan_y = event.pageY - pan_start_y;
+
+    set_transform();
+}
+
+
+function main_old()
+{
     var textbox_divs = document.querySelectorAll(".textbox");
 
     counter = 0;
@@ -106,10 +132,7 @@ function main()
     // var btn_zoomout = document.querySelector("#btn-zoomout");
 
     console.log("End main");
-    */
 }
-
-
 
 
 class Canvas
@@ -548,9 +571,19 @@ function zoom_out() {
 
 function zoom_canvas(step_percent) {
     scale += step_percent;
-    document.querySelector("body").style.transform = `scale(${scale}%)`;
+    set_transform();
 }
 
+function reset_zoom()
+{
+    scale = 1;
+    set_transform();
+}
+
+function set_transform()
+{
+    document.querySelector("body").style.transform = `scale(${scale}) translate(${pan_x}px, ${pan_y}px)`;
+}
 
 
 function resize(event)
