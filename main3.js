@@ -257,21 +257,26 @@ class Canvas
     load()
     {
         var list = JSON.parse(localStorage.getItem("canvas"));
-        console.log(list);
+        if(list)
+        {
+            console.log(list);
 
-        list.forEach(obj => {
-            this.add_textbox(
-                obj.x,
-                obj.y,
-                obj.w,
-                obj.h,
-                obj.color,
-                obj.wrap,
-                obj.text,
-            );
-        });
+            list.forEach(obj => {
+                this.add_textbox(
+                    obj.x,
+                    obj.y,
+                    obj.w,
+                    obj.h,
+                    obj.color,
+                    obj.wrap,
+                    obj.text,
+                );
+            });
 
-        console.log("Loaded textboxes:",list);
+            console.log("Loaded textboxes:",list);
+        }
+        else
+            console.log("Nothing to load from local storage");
     }
 }
 

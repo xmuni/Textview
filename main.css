@@ -54,7 +54,7 @@ input:active {
 #bg {
     position: fixed;
     /* background: url("bg_pattern_dots.png"); */
-    background: url("circle.svg") repeat;
+    background: url("img/circle.svg") repeat;
     /* background-repeat: repeat; */
     background-size: 20px 20px;
     opacity: 0.15;
@@ -183,7 +183,7 @@ textarea {
 }
 
 .yellow {
-    border-color: #ffcb106b;
+    border-color: #f7b12fa6;
 }
 
 .green {
