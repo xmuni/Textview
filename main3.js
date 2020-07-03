@@ -166,7 +166,7 @@ class Canvas
         var del = document.createElement("div");
         del.classList.add("delete");
         handle.appendChild(del);
-        del.textContent = "Close";
+        // del.textContent = "×";
 
         // Add color menu
         var colormenu = document.createElement("div");

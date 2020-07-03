@@ -167,11 +167,23 @@ textarea {
 
 .delete {
     position: absolute;
-    top: -21px;
-    right: 10px;
+    top: -19px;
+    right: -19px;
     /* font-weight: bold; */
     text-transform: uppercase;
     cursor: pointer;
+    font-size: 40px;
+    height: 20px;
+    width: 20px;
+    /* color: white; */
+    /* background: rgba(0, 0, 0, 0.5); */
+    background-image: url("img/close.svg");
+    background-size: 100% 100%;
+    opacity: 0.4;
+}
+
+.delete:active {
+    opacity: 0.8;
 }
 
 .blue {
