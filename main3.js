@@ -142,14 +142,39 @@ class Canvas
         this.textboxes = {};
     }
 
-    add_textbox(x=600,y=400,w=400,h=300,color="blue",wrap="soft",text="")
+    add_textbox(loaded_properties={})
     {
-        console.log(x,y,w,h,color,wrap);
+        console.log("Loaded textbox properties:",loaded_properties);
+
+        var defaults = {
+            "x": 600,
+            "y": 400,
+            "w": 400,
+            "h": 300,
+            "color": "blue",
+            "wrap": "soft",
+            "text": "",
+            "title": "",
+        }
+
+        var properties = Object.assign(defaults, loaded_properties);
+
+        var x = properties.x;
+        var y = properties.y;
+        var w = properties.w;
+        var h = properties.h;
+        var color = properties.color;
+        var wrap = properties.wrap;
+        var text = properties.text;
+        var title = properties.title;
+
+        console.log(x,y,w,h,color,wrap,title);
 
         var handle = document.createElement("div");
         var textarea = document.createElement('textarea');
         textarea.value = text;
 
+        // Add wrap button
         var wrap_toggle = document.createElement('span');
         wrap_toggle.classList.add("wrap");
         wrap_toggle.textContent = "wrap";
@@ -161,6 +186,17 @@ class Canvas
         // colorpicker.classList.add("yellow");
         // handle.appendChild(colorpicker);
 
+        // Add title div
+        var title_div = document.createElement('div');
+        title_div.classList.add("title");
+        set_title(title_div,title);
+        handle.appendChild(title_div);
+
+        // Add title button
+        var btn_title = document.createElement('div');
+        btn_title.classList.add("set-title");
+        btn_title.textContent = "title";
+        handle.appendChild(btn_title);
 
         // Add delete button
         var del = document.createElement("div");
@@ -249,6 +285,9 @@ class Canvas
         });
         // return list;
 
+        console.log("Saving data:")
+        console.log(list);
+
         localStorage.setItem("canvas",JSON.stringify(list));
 
         console.log("Saved textboxes");
@@ -261,16 +300,10 @@ class Canvas
         {
             console.log(list);
 
-            list.forEach(obj => {
-                this.add_textbox(
-                    obj.x,
-                    obj.y,
-                    obj.w,
-                    obj.h,
-                    obj.color,
-                    obj.wrap,
-                    obj.text,
-                );
+            list.forEach(properties => {
+                console.log("Loading textbox properties:")
+                console.log(properties);
+                this.add_textbox(properties);
             });
 
             console.log("Loaded textboxes:",list);
@@ -310,6 +343,10 @@ class Textbox
 
         this.btnwrap = handle.querySelector(".wrap");
         this.btnwrap.addEventListener("click", this.toggle_wrap.bind(this));
+
+        
+        handle.querySelector(".set-title").addEventListener("click", this.edit_title);
+
         
         var del = handle.querySelector(".delete");
         del.setAttribute("data-id",id);
@@ -347,6 +384,7 @@ class Textbox
             "color": this.handle.attributes["data-color"].value,
             "wrap": this.textarea.attributes["wrap"].value,
             "text": this.textarea.value,
+            "title": this.handle.querySelector(".title").textContent,
         }
         return obj;
     }
@@ -489,7 +527,19 @@ class Textbox
             newwin.focus();
         }
     }
-    
+
+    edit_title(event)
+    {
+        var handle = event.target.parentNode.parentNode;
+
+        var title_div = handle.querySelector(".title");
+        var title = title_div.textContent;
+
+        var new_title = window.prompt("Set a new title", title);
+
+        set_title(title_div,new_title);
+    }
+
     set_color(event)
     {
         var icon = event.target;
@@ -528,6 +578,21 @@ function mousedragmove()
 
 
 
+
+function set_title(title_div,new_title)
+{
+    if(new_title == "")
+    {
+        title_div.textContent = "";
+        title_div.style.display = "none";
+    }
+
+    else if(new_title)
+    {
+        title_div.textContent = new_title;
+        title_div.style.display = "block";
+    }
+}
 
 
 function get_w(element)

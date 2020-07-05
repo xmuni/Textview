@@ -155,7 +155,7 @@ textarea {
 .wrap {
     position: absolute;
     bottom: -18px;
-    right: 120px;
+    right: 180px;
     /* color: rgba(0, 38, 88, 0.8); */
     color: black;
     /* font-weight: bold; */
@@ -180,6 +180,23 @@ textarea {
     background-image: url("img/close.svg");
     background-size: 100% 100%;
     opacity: 0.4;
+}
+
+.set-title {
+    position: absolute;
+    bottom: -18px;
+    right: 122px;
+    cursor: pointer;
+    z-index: 200;
+}
+
+.title {
+    position: absolute;
+    top: -20px;
+    width: 100%;
+    text-align: center;
+    opacity: 0.4;
+    font-weight: bold;
 }
 
 .delete:active {
