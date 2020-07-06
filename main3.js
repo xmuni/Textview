@@ -781,7 +781,7 @@ function check_notifications(check_anyway=false)
 
 function notify(msg="Test notification message",title="Textview")
 {
-    var img = '/img/dots3x3_square.svg';
+    var img = './img/dots3x3_square.svg';
 
     // Let's check if the browser supports notifications
     if (!("Notification" in window)) {
