@@ -31,7 +31,7 @@ body {
     user-select: none;
 }
 
-input {
+button {
     min-width: 5rem;
     background: #eee;
     border: 1px solid #ddd;
@@ -43,11 +43,11 @@ input {
     z-index: 200;
 }
 
-input:hover {
+button:hover {
     background: #f3f3f3;
 }
 
-input:active {
+button:active {
     background: #e3e3e3;
 }
 
@@ -225,4 +225,32 @@ textarea {
 
 .red {
     border-color: #d63630b9;
+}
+
+.controls {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.enable-notifications {
+    background: #eee;
+    border: 1px solid #ddd;
+    padding: .4rem 1rem;
+    margin: .5rem;
+    /* min-height: 2rem; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-family: "Tahoma";
+    font-size: 14.3px;
+    line-height: normal;
+    letter-spacing: normal;
+    font-weight: 400;
+}
+
+.enable-notifications input {
+    margin-right: .5rem;
 }

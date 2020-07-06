@@ -14,12 +14,19 @@
 
     <div id="bg"></div>
 
-    <div class="">
-        <input id="btn-zoomout" data-textbox="1" type="button" value="Zoom out" onclick=zoom_out()>
-        <input id="btn-zoomin"  data-textbox="1" type="button" value="Zoom in" onclick=zoom_in()>
-        <input id="btn-resetzoom"  data-textbox="1" type="button" value="Reset zoom" onclick=reset_zoom()>
-        <input type="button" value="Save" onclick="canvas.save()">
-        <input type="button" value="Add new" onclick="canvas.add_textbox()">
+    <div class="controls">
+        <button id="btn-zoomout" data-textbox="1" type="button" value="Zoom out" onclick=zoom_out()>Zoom out</button>
+        <button id="btn-zoomin"  data-textbox="1" type="button" value="Zoom in" onclick=zoom_in()>Zoom in</button>
+        <button id="btn-resetzoom"  data-textbox="1" type="button" value="Reset zoom" onclick=reset_zoom()>Reset zoom</button>
+        <button type="button" value="Save" onclick="canvas.save()">Save</button>
+        <button type="button" value="Add new" onclick="canvas.add_textbox()">Add new</button>
+
+        <button type="button" value="Notify" onclick="check_notifications(true)">Check alerts</button>
+
+        <div class="enable-notifications">
+            <input type="checkbox" name="Notify" id="checkbox-notifications">
+            <div>Notify</div>
+        </div>
     </div>
 
 

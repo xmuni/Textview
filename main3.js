@@ -33,6 +33,11 @@ var pan_y = 0;
 // var translate_x = 0;
 // var translate_y = 0;
 
+var interval_check_notifications = null;
+
+const CHECK_INTERVAL_MIN = 5;
+
+
 
 onload = main;
 
@@ -67,6 +72,8 @@ function main()
 
     document.addEventListener("wheel", zoom);
 
+    check_notifications();
+    interval_check_notifications = setInterval(check_notifications, CHECK_INTERVAL_MIN*60*1000);
 }
 
 
@@ -140,6 +147,11 @@ class Canvas
     constructor()
     {
         this.textboxes = {};
+    }
+
+    get_textboxes()
+    {
+        return Object.values(this.textboxes);
     }
 
     add_textbox(loaded_properties={})
@@ -713,11 +725,85 @@ function resize_textareas_to_grid() {
 }
 
 
+function notifications_enabled()
+{
+    return document.querySelector("#checkbox-notifications").checked;
+}
 
 
+function check_notifications(check_anyway=false)
+{
+    if(!notifications_enabled() && !check_anyway)
+        return;
 
-// ball.onmouseup = function()
-// {
-//     document.removeEventListener('mousemove', mousemove);
-//     ball.onmouseup = null;
-// };
+    console.log("Checking notifications...")
+
+    const KEYWORD_NOTIFY = "DATE"
+
+    var now = new Date();
+    var now_year = now.getFullYear();
+    var now_month = now.getMonth();
+    var now_day = now.getUTCDate();
+
+    canvas.get_textboxes().forEach(textbox => {
+        var text = textbox.textarea.value;
+        if(text.includes(KEYWORD_NOTIFY))
+        {
+            text.split('\n').forEach(line => {
+                if(line.includes(KEYWORD_NOTIFY))
+                {
+                    line = line.replace(KEYWORD_NOTIFY,"").trim();
+                    var words = line.split(" ");
+                    console.log(words);
+
+                    var year = words[0];
+                    var month = words[1] -1;
+                    var day = words[2];
+
+                    var notify_date = new Date(year,month,day);
+                    console.log(notify_date);
+
+                    if(now >= notify_date)
+                    {
+                        console.log("Notify date reached");
+                        notify(text, "  Textview");
+                    }
+                    else
+                        console.log("Notify date still to reach");
+                }
+            });
+        }
+    });
+
+    return "OK";
+}
+
+
+function notify(msg="Test notification message",title="Textview")
+{
+    var img = '/img/dots3x3_square.svg';
+
+    // Let's check if the browser supports notifications
+    if (!("Notification" in window)) {
+        alert("This browser does not support desktop notification");
+    }
+
+    // Let's check whether notification permissions have already been granted
+    else if (Notification.permission === "granted") {
+        // If it's okay let's create a notification
+        var notification = new Notification(title, {body:msg, icon:img});
+    }
+
+    // Otherwise, we need to ask the user for permission
+    else if (Notification.permission !== "denied")
+    {
+        Notification.requestPermission().then(function (permission) {
+            // If the user accepts, let's create a notification
+            if (permission === "granted")
+            {
+                var notification = new Notification(title, {body:msg, icon:img});
+            }
+        });
+    }
+  
+}
