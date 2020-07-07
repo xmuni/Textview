@@ -753,14 +753,21 @@ function check_notifications(check_anyway=false)
                 if(line.includes(KEYWORD_NOTIFY))
                 {
                     line = line.replace(KEYWORD_NOTIFY,"").trim();
-                    var words = line.split(" ");
+                    var words = line.replace(":"," ").split(" ");
                     console.log(words);
 
                     var year = words[0];
                     var month = words[1] -1;
                     var day = words[2];
 
-                    var notify_date = new Date(year,month,day);
+                    var hour = 0 || words[3];
+                    var min = 0 || words[4];
+
+                    // [year,month,day,hour,min].forEach(str => {
+                    //     console.log(parseInt(str))
+                    // });
+
+                    var notify_date = new Date(year,month,day,hour,min);
                     console.log(notify_date);
 
                     if(now >= notify_date)
