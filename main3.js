@@ -753,7 +753,7 @@ function check_notifications(check_anyway=false)
                 if(line.includes(KEYWORD_NOTIFY))
                 {
                     line = line.replace(KEYWORD_NOTIFY,"").trim();
-                    var words = line.replace(":"," ").split(" ");
+                    var words = line.replace("-"," ").replace(":"," ").split(" ");
                     console.log(words);
 
                     var year = words[0];
@@ -776,7 +776,7 @@ function check_notifications(check_anyway=false)
                         notify(text, "  Textview");
                     }
                     else
-                        console.log("Notify date still to reach");
+                        console.log("Notify date still to reach. Now:", now);
                 }
             });
         }
