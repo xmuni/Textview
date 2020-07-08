@@ -37,6 +37,8 @@ var interval_check_notifications = null;
 
 const CHECK_INTERVAL_MIN = 5;
 
+var mouse_on_textarea = false;
+
 
 
 onload = main;
@@ -352,6 +354,8 @@ class Textbox
         });
 
         this.textarea.addEventListener("dblclick", this.textarea_doubleclicked);
+        this.textarea.addEventListener("mouseenter", () => mouse_on_textarea = true);
+        this.textarea.addEventListener("mouseleave", () => mouse_on_textarea = false);
 
         this.btnwrap = handle.querySelector(".wrap");
         this.btnwrap.addEventListener("click", this.toggle_wrap.bind(this));
@@ -630,6 +634,11 @@ function set_h(element,height)
 
 
 function zoom(event) {
+
+    // Don't zoom if the user is trying to scroll a textarea
+    if(mouse_on_textarea)
+        return;
+
     event.preventDefault();
     var dir = event.deltaY > 0 ? "down" : "up";
     console.log('Scroll wheel '+dir);
@@ -759,14 +768,20 @@ function check_notifications(check_anyway=false)
                     var year = words[0];
                     var month = words[1] -1;
                     var day = words[2];
+                    var hour = 0;
+                    var min = 0;
 
-                    var hour = 0 || words[3];
-                    var min = 0 || words[4];
+                    if(words.length >= 5)
+                    {
+                        hour = words[3];
+                        min = words[4];
+                    }
 
                     // [year,month,day,hour,min].forEach(str => {
                     //     console.log(parseInt(str))
                     // });
-
+                    
+                    // console.log(year,month,day,hour,min);
                     var notify_date = new Date(year,month,day,hour,min);
                     console.log(notify_date);
 
