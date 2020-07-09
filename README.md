@@ -1,3 +1,3 @@
 # Textview
 
-https://xmuni.github.io/Textview/
+https://xmuni.github.io/textview/

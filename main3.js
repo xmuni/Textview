@@ -39,6 +39,7 @@ const CHECK_INTERVAL_MIN = 5;
 
 var mouse_on_textarea = false;
 
+var settings = null;
 
 
 onload = main;
@@ -46,6 +47,7 @@ onload = main;
 onunload = function() {
     if(canvas)
         canvas.save();
+    localStorage.setItem("settings",JSON.stringify(settings));
 };
 
 
@@ -58,6 +60,24 @@ function main()
     canvas.load();
     // canvas.add_textbox(600,400,300,300);
     // canvas.add_textbox(200,200,150,150);
+
+
+    var saved = JSON.parse(localStorage.getItem("settings"));
+    if(saved)
+        settings = saved;
+    else
+    {
+        settings = {
+            "notify": true,
+        }
+    }
+
+
+    var checkbox_notify = document.querySelector("#checkbox-notify")
+    checkbox_notify.checked = settings["notify"];
+    checkbox_notify.addEventListener("click", function() {
+        settings["notify"] = document.querySelector("#checkbox-notify").checked;
+    })
 
 
     document.addEventListener("mouseup", function() {
@@ -736,7 +756,7 @@ function resize_textareas_to_grid() {
 
 function notifications_enabled()
 {
-    return document.querySelector("#checkbox-notifications").checked;
+    return document.querySelector("#checkbox-notify").checked;
 }
 
 
@@ -828,4 +848,56 @@ function notify(msg="Test notification message",title="Textview")
         });
     }
   
+}
+
+
+function save_txt()
+{
+    console.log("Saving txt");
+
+    var date = get_date_string(new Date());
+    
+    var text_fields = ["asd"];
+    canvas.get_textboxes().forEach(textbox => {
+        if(textbox.title != "")
+            text_fields.push(textbox.title);
+        else
+            text_fields.push("[Untitled textbox]");
+        text_fields.push(textbox.textarea.value);
+    });
+
+    console.log(text_fields);
+    
+    var filename = `Textview ${date}.txt`;
+    download(text_fields.join("\n\n"), filename, 'text/plain');
+}
+    
+
+function download(content, fileName, contentType)
+{
+    var newelement = document.createElement("a");
+    var file = new Blob([content], {type: contentType});
+    newelement.href = URL.createObjectURL(file);
+    newelement.download = fileName;
+    newelement.style.display = "none";
+    document.body.appendChild(newelement);
+    newelement.click();
+    document.body.removeChild(newelement);
+    setTimeout(function() { URL.revokeObjectURL(newelement.href); }, 1000);
+}
+
+
+// Turns a date object into a string like "20190611"
+function get_date_string(date)
+{
+	var year = date.getUTCFullYear();
+	var month = date.getUTCMonth()+1;
+	var day = date.getUTCDate();
+
+	if(month<10)
+		month = "0"+month;
+	if(day<10)
+		day = "0"+day;
+
+	return [year,month,day].join('-');
 }
