@@ -857,13 +857,13 @@ function save_txt()
 
     var date = get_date_string(new Date());
     
-    var text_fields = ["asd"];
+    var text_fields = [];
     canvas.get_textboxes().forEach(textbox => {
-        if(textbox.title != "")
-            text_fields.push(textbox.title);
+        if(textbox.properties.title != "")
+            text_fields.push(textbox.properties.title);
         else
             text_fields.push("[Untitled textbox]");
-        text_fields.push(textbox.textarea.value);
+        text_fields.push(textbox.textarea.value);   
     });
 
     console.log(text_fields);
