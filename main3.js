@@ -410,11 +410,6 @@ class Textbox
         console.log("Textarea:",this.textarea);
     }
 
-    get_title()
-    {
-        this.handle.querySelector(".title").textContent;
-    }
-
     save()
     {
         var obj = {
@@ -425,7 +420,7 @@ class Textbox
             "color": this.handle.attributes["data-color"].value,
             "wrap": this.textarea.attributes["wrap"].value,
             "text": this.textarea.value,
-            "title": this.get_title(),
+            "title": this.handle.querySelector(".title").textContent,
         }
         return obj;
     }
@@ -865,7 +860,7 @@ function save_txt()
     var text_fields = [];
     canvas.get_textboxes().forEach(textbox => {
 
-        var title = textbox.get_title();
+        var title = textbox.handle.querySelector(".title").textContent;
         if(title == "")
             text_fields.push("[Untitled textbox]");
         else
@@ -873,9 +868,9 @@ function save_txt()
 
         text_fields.push(textbox.textarea.value);   
     });
-
     console.log(text_fields);
     
+
     var filename = `Textview ${date}.txt`;
     download(text_fields.join("\n\n"), filename, 'text/plain');
 }
