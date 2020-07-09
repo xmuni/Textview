@@ -410,6 +410,11 @@ class Textbox
         console.log("Textarea:",this.textarea);
     }
 
+    get_title()
+    {
+        this.handle.querySelector(".title").textContent;
+    }
+
     save()
     {
         var obj = {
@@ -420,7 +425,7 @@ class Textbox
             "color": this.handle.attributes["data-color"].value,
             "wrap": this.textarea.attributes["wrap"].value,
             "text": this.textarea.value,
-            "title": this.handle.querySelector(".title").textContent,
+            "title": this.get_title(),
         }
         return obj;
     }
@@ -859,10 +864,13 @@ function save_txt()
     
     var text_fields = [];
     canvas.get_textboxes().forEach(textbox => {
-        if(textbox.properties.title != "")
-            text_fields.push(textbox.properties.title);
-        else
+
+        var title = textbox.get_title();
+        if(title == "")
             text_fields.push("[Untitled textbox]");
+        else
+            text_fields.push(title);
+
         text_fields.push(textbox.textarea.value);   
     });
 
