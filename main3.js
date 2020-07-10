@@ -35,7 +35,7 @@ var pan_y = 0;
 
 var interval_check_notifications = null;
 
-const CHECK_INTERVAL_MIN = 5;
+// var check_interval_min = 5;
 
 var mouse_on_textarea = false;
 
@@ -67,10 +67,14 @@ function main()
         settings = saved;
     else
     {
+        // Default settings
         settings = {
             "notify": true,
+            "check_interval": 5,
         }
     }
+
+    settings["notify"] = false;
 
 
     var checkbox_notify = document.querySelector("#checkbox-notify")
@@ -91,11 +95,31 @@ function main()
     });
 
     document.querySelector("body").addEventListener("mousedown", pan_start);
-
+    
     document.addEventListener("wheel", zoom);
+    
+    
+    var spinbox_interval = document.querySelector("#spinbox-interval");
+    spinbox_interval.value = settings["check_interval"];
+    spinbox_interval.addEventListener("mouseenter", () => mouse_on_textarea = true);
+    spinbox_interval.addEventListener("mouseleave", () => mouse_on_textarea = false);
+
+    spinbox_interval.addEventListener("change", function(event) {
+        var value = event.target.value;
+        if(parseInt(value))
+        {
+            settings["check_interval"] = value;
+            console.log("Check interval set to",value);
+        }
+
+        clearInterval(interval_check_notifications);
+        interval_check_notifications = setInterval(check_notifications, settings["check_interval"]*60*1000);
+    });
+
 
     check_notifications();
-    interval_check_notifications = setInterval(check_notifications, CHECK_INTERVAL_MIN*60*1000);
+    clearInterval(interval_check_notifications);
+    interval_check_notifications = setInterval(check_notifications, settings["check_interval"]*60*1000);
 }
 
 

@@ -31,16 +31,22 @@ body {
     user-select: none;
 }
 
-button {
+button, .buttonbox {
+    font-family: inherit;
+    font-size: inherit;
     min-width: 5rem;
+    min-height: 2rem;
     background: #eee;
     border: 1px solid #ddd;
     margin: 10px;
     padding: 7px;
     border-radius: 2px;
     /* box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05); */
-    cursor: pointer;
     z-index: 200;
+}
+
+button {
+    cursor: pointer;
 }
 
 button:hover {
@@ -244,8 +250,8 @@ textarea {
     justify-content: center;
     align-items: center;
 
-    font-family: "Tahoma";
-    font-size: 14.3px;
+    /* font-family: "Tahoma"; */
+    /* font-size: 14.3px; */
     line-height: normal;
     letter-spacing: normal;
     font-weight: 400;
@@ -253,4 +259,12 @@ textarea {
 
 .enable-notifications input {
     margin-right: .5rem;
+}
+
+#spinbox-interval {
+    max-width: 3rem;
+    padding: .2rem 0 .2rem .3rem;
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(0, 0, 0, 0.137);
+    border-radius: 2px;
 }
