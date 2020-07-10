@@ -12,9 +12,7 @@
     <link rel="shortcut icon" href="img/dots3x3_square.svg" type="image/x-icon">
 <body>
 
-    <div id="bg"></div>
-
-    <div class="controls">
+    <div id="controls">
         <button id="btn-zoomout" data-textbox="1" type="button" value="Zoom out" onclick=zoom_out()>Zoom out</button>
         <button id="btn-zoomin"  data-textbox="1" type="button" value="Zoom in" onclick=zoom_in()>Zoom in</button>
         <button id="btn-resetzoom"  data-textbox="1" type="button" value="Reset zoom" onclick=reset_zoom()>Reset zoom</button>
@@ -36,16 +34,12 @@
         </div>
     </div>
 
+    <div id="canvas">
 
-<!--     
-    <div class="textbox">
-        <div class="handle red">
-            <span class="wrap" href="">wrap</span>
-        </div>
-        <textarea name="" id="" cols="30" rows="10" placeholder="Testing box" wrap="soft"></textarea>
+        <div id="bg"></div>
+
     </div>
--->
-   
+
 
 
     <script src="main3.js"></script>

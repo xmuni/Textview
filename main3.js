@@ -41,6 +41,8 @@ var mouse_on_textarea = false;
 
 var settings = null;
 
+var canvas_element = document.querySelector("#canvas");
+
 
 onload = main;
 
@@ -74,14 +76,14 @@ function main()
         }
     }
 
-    settings["notify"] = false;
-
+    // settings["notify"] = false;
 
     var checkbox_notify = document.querySelector("#checkbox-notify")
     checkbox_notify.checked = settings["notify"];
+    console.log("Notify checkbox set to",settings["notify"],"from settings");
     checkbox_notify.addEventListener("click", function() {
         settings["notify"] = document.querySelector("#checkbox-notify").checked;
-    })
+    });
 
 
     document.addEventListener("mouseup", function() {
@@ -94,7 +96,7 @@ function main()
         resizing_textarea = false;
     });
 
-    document.querySelector("body").addEventListener("mousedown", pan_start);
+    canvas_element.addEventListener("mousedown", pan_start);
     
     document.addEventListener("wheel", zoom);
     
@@ -286,7 +288,7 @@ class Canvas
         this.textbox_div.appendChild(handle);
         this.textbox_div.appendChild(textarea);
         
-        document.querySelector("body").appendChild(this.textbox_div);
+        canvas_element.appendChild(this.textbox_div);
         
         var id = this.get_next_id();
         var textbox = new Textbox(id,handle,textarea);
@@ -717,7 +719,7 @@ function reset_zoom()
 
 function set_transform()
 {
-    document.querySelector("body").style.transform = `scale(${scale}) translate(${pan_x}px, ${pan_y}px)`;
+    canvas_element.style.transform = `scale(${scale}) translate(${pan_x}px, ${pan_y}px)`;
 }
 
 
@@ -807,7 +809,7 @@ function check_notifications(check_anyway=false)
                 {
                     line = line.replace(KEYWORD_NOTIFY,"").trim();
                     var words = line.replace("-"," ").replace(":"," ").split(" ");
-                    console.log(words);
+                    // console.log(words);
 
                     var year = words[0];
                     var month = words[1] -1;
@@ -827,7 +829,8 @@ function check_notifications(check_anyway=false)
                     
                     // console.log(year,month,day,hour,min);
                     var notify_date = new Date(year,month,day,hour,min);
-                    console.log(notify_date);
+                    console.log("Current date:",now);
+                    console.log("Target date:",notify_date);
 
                     if(now >= notify_date)
                     {
@@ -907,9 +910,9 @@ function download(content, fileName, contentType)
     newelement.href = URL.createObjectURL(file);
     newelement.download = fileName;
     newelement.style.display = "none";
-    document.body.appendChild(newelement);
+    canvas_element.appendChild(newelement);
     newelement.click();
-    document.body.removeChild(newelement);
+    canvas_element.removeChild(newelement);
     setTimeout(function() { URL.revokeObjectURL(newelement.href); }, 1000);
 }
 

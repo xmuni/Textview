@@ -2,6 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    /* position: relative; */
 }
 
 body {
@@ -29,6 +30,30 @@ body {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+}
+
+#controls {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    z-index: 300;
+
+    padding: 0.5vh 0;
+    background: rgba(255, 255, 255, 0.7);
+
+    font-family: "Arial", "Inconsolata";
+}
+
+#canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 
 button, .buttonbox {
@@ -231,13 +256,6 @@ textarea {
 
 .red {
     border-color: #d63630b9;
-}
-
-.controls {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
 }
 
 .enable-notifications {
