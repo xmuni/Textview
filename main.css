@@ -123,8 +123,9 @@ body {
 }
 
 button.bg-green {
-    background: #72b34896;
-    border-color: transparent;
+    background: #72b34896 !important;
+    border: 1px solid #72b34896;
+    /* border-color: transparent; */
     transition-duration: 600ms;
 }
 
