@@ -153,6 +153,14 @@ function main()
 }
 
 
+function pan(x,y)
+{
+    pan_x += x;
+    pan_y += y;
+    repaint();
+}
+
+
 function pan_start(event)
 {
     if(dragging || resizing_textarea)
@@ -176,7 +184,7 @@ function pan_canvas(event)
     pan_x = event.pageX - pan_start_x;
     pan_y = event.pageY - pan_start_y;
 
-    set_transform();
+    repaint();
 }
 
 
@@ -786,16 +794,16 @@ function zoom_out() {
 
 function zoom_canvas(step_percent) {
     scale += step_percent;
-    set_transform();
+    repaint();
 }
 
 function reset_zoom()
 {
     scale = 1;
-    set_transform();
+    repaint();
 }
 
-function set_transform()
+function repaint()
 {
     canvas_element.style.transform = `scale(${scale}) translate(${pan_x}px, ${pan_y}px)`;
 }

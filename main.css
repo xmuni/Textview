@@ -58,6 +58,39 @@ body {
     height: 100%;
 }
 
+#navigator {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    font-size: 1.2rem;
+    transform: rotate(45deg);
+    margin: 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    /* width: 3rem; */
+    /* height: 3rem; */
+}
+
+.arrow {
+    background: rgba(0, 0, 0, 0.06);
+    /* text-align: center; */
+    /* vertical-align: middle; */
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+.arrow:hover {
+    background: rgba(0, 0, 0, 0.02);
+    transform: 100ms;
+}
+
+.arrow:active {
+    background: rgba(0, 0, 0, 0.1);
+}
+
 button, .buttonbox {
     font-family: inherit;
     font-size: inherit;
