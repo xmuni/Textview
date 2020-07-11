@@ -410,6 +410,10 @@ class Canvas
         xhr.onreadystatechange = function() {
             if(this.readyState === XMLHttpRequest.DONE && this.status === 200) {
                 console.log("Request sent");
+
+                var button = document.querySelector("#button-savetodb");
+                button.classList.add("bg-green");
+                setTimeout(() => document.querySelector("#button-savetodb").classList.remove("bg-green"), 2000);
             }
         }
         xhr.send(jsontext);

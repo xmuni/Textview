@@ -97,8 +97,11 @@ body {
     /* position: absolute; */
     /* top: 30%; */
     /* left: 30%; */
+
+    /* Magic numbers */
     margin-left: -70%;
     margin-top: 0%;
+
     content: "";
     width: 30%;
     height: 30%;
@@ -119,6 +122,12 @@ body {
     transform: rotate(180deg);
 }
 
+.bg-green {
+    background: #72b34896;
+    border-color: transparent;
+    transition-duration: 600ms;
+}
+
 button, .buttonbox {
     font-family: inherit;
     font-size: inherit;
@@ -131,6 +140,7 @@ button, .buttonbox {
     border-radius: 2px;
     /* box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05); */
     z-index: 200;
+    transition-duration: 300ms;
 }
 
 button {
