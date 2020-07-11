@@ -43,15 +43,43 @@ var settings = null;
 
 var canvas_element = document.querySelector("#canvas");
 
+const database_storage_url = "https://herokustorage.herokuapp.com/update/textview"
+
 
 onload = main;
 
 onunload = function() {
     if(canvas)
         canvas.save();
-    localStorage.setItem("settings",JSON.stringify(settings));
+    var jsontext = JSON.stringify(settings);
+    localStorage.setItem("settings",jsontext);
 };
 
+
+function write_to_database(jsontext)
+{
+    return
+}
+
+
+
+function load_from_database()
+{
+    var msg_confirm = "Loading from database will clear all current content. Continue?";
+    if(confirm(msg_confirm))
+    {
+        canvas.clear();
+
+        fetch('https://herokustorage.herokuapp.com/get/textview')
+        .then(response => response.json())
+        .then(data => {
+            console.log("Data:",data);
+            // var list = JSON.parse(data);
+            // console.log(data);
+            canvas.load_textboxes(data);
+        });
+    }
+}
 
 
 function main()
@@ -301,6 +329,18 @@ class Canvas
         return textbox;
     }
 
+    clear()
+    {
+        var elements = canvas_element.querySelectorAll(".textbox");
+        elements.forEach(element => {
+            while(element.firstChild)
+                element.removeChild(element.firstChild);
+            canvas_element.removeChild(element);
+        });
+
+        this.textboxes = {};
+    }
+
     delete_textbox(id)
     {
         console.log("Deleting textbox with id",id);
@@ -336,26 +376,64 @@ class Canvas
         return ids.length;
     }
 
-    save()
+    to_json()
     {
         var list = [];
         var textboxes = Object.values(this.textboxes);
         textboxes.forEach(textbox => {
             list.push(textbox.save());
         });
-        // return list;
+        return JSON.stringify(list);
+    }
+
+    save_to_database()
+    {
+        // write_to_database(this.to_json());
+        var jsontext = this.to_json();
+        
+        console.log('Updating database with jsontext:',typeof(jsontext),jsontext);
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("PUT", database_storage_url, true);
+
+        //Send the proper header information along with the request
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+        xhr.onreadystatechange = function() {
+            if(this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                console.log("Request sent");
+            }
+        }
+        xhr.send(jsontext);
+    }
+
+    save()
+    {
+        var jsontext = this.to_json();
 
         console.log("Saving data:")
-        console.log(list);
+        console.log(jsontext);
 
-        localStorage.setItem("canvas",JSON.stringify(list));
+        localStorage.setItem("canvas",jsontext);
 
         console.log("Saved textboxes");
     }
-
+    
     load()
     {
         var list = JSON.parse(localStorage.getItem("canvas"));
+        this.load_textboxes(list);
+    }
+
+    load_from_database()
+    {
+        load_from_database();
+    }
+
+    load_textboxes(list)
+    {
+        console.log("Loading textboxes:",list);
+
         if(list)
         {
             console.log(list);
