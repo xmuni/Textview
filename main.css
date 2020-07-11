@@ -80,6 +80,8 @@ body {
     align-items: center;
     border: 1px solid rgba(0, 0, 0, 0.2);
     cursor: pointer;
+    position: relative;
+    color: transparent;
 }
 
 .arrow:hover {
@@ -89,6 +91,27 @@ body {
 
 .arrow:active {
     background: rgba(0, 0, 0, 0.1);
+}
+
+.arrow::after {
+    position: absolute;
+    content: "";
+    width: 30%;
+    height: 30%;
+    border-top: 4px solid #444;
+    border-left: 4px solid #444;
+}
+
+.arrow:nth-child(2)::after {
+    transform: rotate(90deg);
+}
+
+.arrow:nth-child(3)::after {
+    transform: rotate(270deg);
+}
+
+.arrow:nth-child(4)::after {
+    transform: rotate(180deg);
 }
 
 button, .buttonbox {
