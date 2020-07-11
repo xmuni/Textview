@@ -31,7 +31,7 @@ body {
     -ms-user-select: none;
     user-select: none;
 }
-
+	
 #controls {
     position: fixed;
     top: 0;
@@ -95,12 +95,18 @@ body {
 
 .arrow::after {
     position: absolute;
+    top: 30%;
+    left: 30%;
     content: "";
     width: 30%;
     height: 30%;
     border-top: 4px solid #444;
     border-left: 4px solid #444;
     transform-origin: center;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) { 
+    background: blue;
 }
 
 .arrow:nth-child(2)::after {
