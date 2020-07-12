@@ -51,6 +51,10 @@ onload = main;
 onunload = function() {
     if(canvas)
         canvas.save();
+
+    settings["pan_x"] = pan_x;
+    settings["pan_y"] = pan_y;
+    settings["scale"] = scale;
     var jsontext = JSON.stringify(settings);
     localStorage.setItem("settings",jsontext);
 };
@@ -92,17 +96,26 @@ function main()
     // canvas.add_textbox(200,200,150,150);
 
 
+    var default_settings = {
+        "notify": true,
+        "check_interval": 5,
+        "pan_x": 0,
+        "pan_y": 0,
+        "scale": 1,
+    }
+
     var saved = JSON.parse(localStorage.getItem("settings"));
     if(saved)
-        settings = saved;
+        settings = Object.assign(default_settings,saved);
     else
-    {
-        // Default settings
-        settings = {
-            "notify": true,
-            "check_interval": 5,
-        }
-    }
+        settings = default_settings;
+
+    pan_x = settings["pan_x"];
+    pan_y = settings["pan_y"];
+    scale = settings["scale"];
+    repaint();
+
+
 
     // settings["notify"] = false;
 
