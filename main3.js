@@ -282,6 +282,7 @@ class Canvas
         var handle = document.createElement("div");
         var textarea = document.createElement('textarea');
         textarea.value = text;
+        textarea.setAttribute("spellcheck",false);
 
         // Add wrap button
         var wrap_toggle = document.createElement('span');
